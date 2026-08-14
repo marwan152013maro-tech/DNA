@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الموسوعة الشاملة للحمض النووي (DNA)</title>
+    <style>
+        :root {
+            --adenine: #ff4757;   /* A - أحمر */
+            --thymine: #2ed573;   /* T - أخضر */
+            --cytosine: #1e90ff;  /* C - أزرق */
+            --guanine: #ffa502;   /* G - برتقالي */
+            --backbone: #ffffff;  /* الهيكل السكري */
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-purple: #bc8cff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0 0 30px 0;
+            min-height: 100vh;
+        }
+
+        .site-header {
+            background: linear-gradient(135deg, #1f2937 0%, #0d1117 100%);
+            border-bottom: 2px solid var(--accent-blue);
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .site-header h1 {
+            color: #ffffff;
+            font-size: 2.2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .site-header p {
+            color: #8b949e;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .color-box {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dna-container {
+            perspective: 800px;
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .dna {
+            position: relative;
+            width: 180px;
+            height: 320px;
+            transform-style: preserve-3d;
+            animation: rotate 8s linear infinite;
+        }
+
+        .dna:hover {
+            animation-play-state: paused;
+        }
+
+        .pair {
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            top: var(--y);
+            transform: rotateY(var(--rot));
+            transform-style: preserve-3d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .base {
+            height: 100%;
+            width: 46%;
+            border-radius: 4px;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .pair::before, .pair::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--backbone);
+            border-radius: 50%;
+            box-shadow: 0 0 8px #fff;
+            top: -2px;
+        }
+
+        .pair::before { left: -6px; }
+        .pair::after { right: -6px; }
+
+        .A { background-color: var(--adenine); color: var(--adenine); }
+        .T { background-color: var(--thymine); color: var(--thymine); }
+        .C { background-color: var(--cytosine); color: var(--cytosine); }
+        .G { background-color: var(--guanine); color: var(--guanine); }
+
+        @keyframes rotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        h2 {
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+
+        h3 {
+            color: var(--accent-green);
+            font-size: 1.05rem;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+
+        p, li {
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        ul, ol {
+            padding-right: 20px;
+            margin: 8px 0;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 0.88rem;
+        }
+
+        .info-table th, .info-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: right;
+        }
+
+        .info-table th {
+            background-color: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        .badge-a { background: var(--adenine); color: #000; }
+        .badge-t { background: var(--thymine); color: #000; }
+        .badge-c { background: var(--cytosine); color: #000; }
+        .badge-g { background: var(--guanine); color: #000; }
+
+        .fact-box {
+            background: rgba(88, 166, 255, 0.05);
+            border-right: 3px solid var(--accent-blue);
+            padding: 12px 15px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.9rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <h1>🧬 الموسوعة التفاعلية الشاملة للحمض النووي (DNA)</h1>
+        <p>نموذج محاكاة 3D تفاعلي ودليل علمي متكامل للـ DNA</p>
+    </header>
+
+    <div class="main-container">
+
+        <div class="card">
+            <h2>1. النموذج التفاعلي ثلاثي الأبعاد (3D)</h2>
+            
+            <div class="legend">
+                <div class="legend-item"><div class="color-box A"></div> أدينين (A)</div>
+                <div class="legend-item"><div class="color-box T"></div> ثايمين (T)</div>
+                <div class="legend-item"><div class="color-box C"></div> سيتوسين (C)</div>
+                <div class="legend-item"><div class="color-box G"></div> جوانين (G)</div>
+            </div>
+
+            <div class="dna-container">
+                <div class="dna" id="dna"></div>
+            </div>
+
+            <div class="fact-box">
+                💡 <strong>تفاعل:</strong> مرر الماوس فوق المجسم لإيقاف الدوران وملاحظة ازدواج القواعد النيتروجينية وتوازي الشريطين.
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>2. إحصائيات الجينوم البشري والأرقام الدقيقة</h2>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3.2 مليار</span>
+                    زوج من القواعد في الجينوم البشري الأحادي.
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20,000 - 25,000</span>
+                    جين مشفّر للبروتينات فقط (يمثل ~1.5% من الـ DNA).
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2 متر</span>
+                    طول شريط الـ DNA الممتد داخل الخلية البشرية الواحدة.
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">99.9%</span>
+                    نسبة التشابه في تسلسل الـ DNA بين جميع البشر.
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>3. ما هو الـ DNA وتاريخ اكتشافه الكامل؟</h2>
+            <p>
+                <strong>الحمض النووي الريبوزي منقوص الأكسجين (Deoxyribonucleic Acid)</strong> هو بوليمر حيوي يتكون من سلسلتين متعددتي النيوكليوتيدات تلتفان حول بعضهما لتشكيلا لولباً مزدوجاً، يحمل التعليمات الوراثية لتطور وتكاثر كافة الكائنات الحية والعديد من الفيروسات.
+            </p>
+            <h3>المحطات التاريخية البارزة:</h3>
+            <ul>
+                <li><strong>1869 (فريدريش ميشر):</strong> أول من استخرج مادة حمضية غنية بالفوسفات من خلايا الدم البيضاء وأسماها "النوئين" (Nuclein).</li>
+                <li><strong>1919 (فيبوس ليفين):</strong> اكتشف أجزاء النيوكليوتيدة (السكر، الفوسفات، القواعد النيتروجينية).</li>
+                <li><strong>1944 (أوفري، ماكليود، وماكارثي):</strong> أثبتوا عبر تجارب التحول البكتيري أن الـ DNA هو المادة الوراثية وليس البروتين.</li>
+                <li><strong>1950 (إروين تشارغاف):</strong> اكتشف قانون النسب المساوية؛ حيث نسبة الأدينين تساوي الثايمين ($A=T$)، والجوانين يساوي السيتوسين ($G=C$).</li>
+                <li><strong>1953 (واتسون، كريك، وفرانكلين):</strong> اكتشاف بنية اللولب المزدوج اعتماداً على صورة حيود الأشعة السينية (Photo 51) الخاصة بروزاليند فرانكلين.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>4. التركيب الكيميائي الدقيق والأبعاد الهندسية</h2>
+            <p>
+                يتكون الـ DNA من نيوكليوتيدات يرتبط بعضها ببعض بواسطة روابط فوسفاتية ثنائية الإستر (Phosphodiester Bonds) بين الكربون $3'$ لسكر و $5'$ لسكر التالي:
+            </p>
+            <ol>
+                <li><strong>سكر الديوكسي ريبوز (Deoxyribose):</strong> سكر خماسي منقوص الأكسجين، يفتقر لذرة أكسجين عند الموقع $2'$.</li>
+                <li><strong>مجموعة الفوسفات ($PO_4^{3-}$):</strong> تعطي الـ DNA شحنته السالبة كلياً.</li>
+                <li><strong>القواعد النيتروجينية:</strong> ترتبط بالكربون $1'$ عبر رابطة جليكوسيدية ($\beta$-N-glycosidic bond).</li>
+            </ol>
+
+            <h3>القياسات الفيزيائية الدقيقة للشكل القياسي (B-DNA):</h3>
+            <ul>
+                <li><strong>قطر اللولب:</strong> 2 نانومتر (20 أنغستروم Å).</li>
+                <li><strong>طول اللفة الكاملة:</strong> 3.4 نانومتر (34Å)، وتتضمن 10.5 زوج من القواعد.</li>
+                <li><strong>الخطوة لكل نيوكليوتيدة:</strong> 0.34 نانومتر (3.4Å).</li>
+                <li><strong>الثلم الأكبر والأصغر (Major & Minor Grooves):</strong> انحناءات فارقة تعتمد عليها البروتينات للتعرف على تتابعات القواعد دون فتح اللولب.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>5. القواعد النيتروجينية ونظام الاقتران التفصيلي</h2>
+            <table class="info-table">
+                <thead>
+                    <tr>
+                        <th>القاعدة</th>
+                        <th>التصنيف الكيميائي</th>
+                        <th>عدد الحلقات</th>
+                        <th>نوع الترابط الهيدروجيني</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-a">A</span> الأدينين</td>
+                        <td>بيورين (Purine)</td>
+                        <td>حلقات مزدوجة</td>
+                        <td>رابطتان هيدروجينيتان مع الثايمين ($A = T$)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-t">T</span> الثايمين</td>
+                        <td>بريميدين (Pyrimidine)</td>
+                        <td>حلقة واحدة</td>
+                        <td>رابطتان هيدروجينيتان مع الأدينين ($T = A$)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-c">C</span> السيتوسين</td>
+                        <td>بريميدين (Pyrimidine)</td>
+                        <td>حلقة واحدة</td>
+                        <td>ثلاث روابط هيدروجينية مع الجوانين ($C \equiv G$)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-g">G</span> الجوانين</td>
+                        <td>بيورين (Purine)</td>
+                        <td>حلقات مزدوجة</td>
+                        <td>ثلاث روابط هيدروجينية مع السيتوسين ($G \equiv C$)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>6. الفروق بين الـ DNA في حقيقيات وبدائيات النوى</h2>
+            <table class="info-table">
+                <thead>
+                    <tr>
+                        <th>وجه المقارنة</th>
+                        <th>حقيقيات النوى (Eukaryotes)</th>
+                        <th>بدائيات النوى (Prokaryotes)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>الموقع</strong></td>
+                        <td>داخل النواة (ومستقل في الميتوكندريا والبلاستيدات)</td>
+                        <td>في السيتوبلازم (منطقة السيتوبلازم النووي/Nucleoid)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>الشكل البنائي</strong></td>
+                        <td>خطي (Linear) مع أطراف تلفيفية (Telomeres)</td>
+                        <td>دائري (Circular) ودون أطراف حرة</td>
+                    </tr>
+                    <tr>
+                        <td><strong>الالتفاف والتعبئة</strong></td>
+                        <td>معقد ومقترن ببروتينات الهستونات (Histones)</td>
+                        <td>غير مقترن بهستونات (مكثف بروابط بروتينية بسيطة)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>البلازميدات</strong></td>
+                        <td>نادرة جداً (مثل الخمائر)</td>
+                        <td>شائعة جداً (جزيئات DNA دائرية إضافية)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>7. آليات التضاعف والتعبير الجيني والإصلاح</h2>
+            <h3>أ. إنزيمات عملية التضاعف (Replication Engine):</h3>
+            <ul>
+                <li><strong>Helicase:</strong> يفك روابط الهيدروجين ويفصل الشريطين.</li>
+                <li><strong>SSB Proteins:</strong> بروتينات تمنع إعادة التوافق وإغلاق الشريطين المفصولين.</li>
+                <li><strong>Primase:</strong> يضع بادئ من الـ RNA لتبدأ بناء النيوكليوتيدات.</li>
+                <li><strong>DNA Polymerase:</strong> يبني الشريط الجديد ويفحص الأخطاء (Proofreading).</li>
+                <li><strong>Ligase:</strong> يربط قطع أوكازاكي (Okazaki) بالشريط المتأخر (Lagging Strand).</li>
+            </ul>
+
+            <h3>ب. الطفرات وآليات الإصلاح (DNA Repair):</h3>
+            <p>
+                يتعرض الـ DNA لعشرات الآلاف من التلفيات يومياً بسبب الأشعة فوق البنفسجية والمواد الكيميائية. وتتم التغطية عبر:
+            </p>
+            <ul>
+                <li><strong>Base Excision Repair (BER):</strong> إزالة وإصلاح القواعد التالفة الفردية.</li>
+                <li><strong>Nucleotide Excision Repair (NER):</strong> إصلاح التشوهات الكبيرة مثل ديمرات الثايمين ($T-T$).</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>8. التطبيقات التقنية والحديثة للـ DNA</h2>
+            <ul>
+                <li><strong>بصمة الـ DNA (DNA Fingerprinting):</strong> تعتمد على المناطق المتكررة القصيرة (STRs) لتحديد الهوية والنسَب في الطب الشرعي.</li>
+                <li><strong>تقنية تفاعل البلمرة المتسلسل (PCR):</strong> لمضاعفة وتحليل العينات الجينية بدقة عالية في وقت قياسي.</li>
+                <li><strong>تعديل الجينات (CRISPR-Cas9):</strong> مقص جيني دقيق لتعديل تسلسلات الـ DNA وعلاج الأمراض الوراثية.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        window.onload = function() {
+            const dnaElement = document.getElementById('dna');
+            const numberOfPairs = 24;
+            const bases = [
+                { left: 'A', right: 'T' },
+                { left: 'T', right: 'A' },
+                { left: 'C', right: 'G' },
+                { left: 'G', right: 'C' }
+            ];
+
+            for (let i = 0; i < numberOfPairs; i++) {
+                const pairElement = document.createElement('div');
+                pairElement.className = 'pair';
+                
+                const rotation = i * 15;
+                const yPosition = i * 13;
+
+                pairElement.style.setProperty('--rot', `${rotation}deg`);
+                pairElement.style.setProperty('--y', `${yPosition}px`);
+
+                const randomBase = bases[i % bases.length];
+
+                const leftBase = document.createElement('div');
+                leftBase.className = `base ${randomBase.left}`;
+
+                const rightBase = document.createElement('div');
+                rightBase.className = `base ${randomBase.right}`;
+
+                pairElement.appendChild(leftBase);
+                pairElement.appendChild(rightBase);
+                dnaElement.appendChild(pairElement);
+            }
+        };
+    </script>
+<head>
+    <meta charset="UTF-8">
+    <title>تأثير النيون</title>
+    <style>
+        /* نضع كود الـ CSS هنا */
+        h1 {
+            color: #00ffcc;
+            font-size: 3rem;
+            text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+            background-color: #0f172a;
+            padding: 20px;
+            text-align: center; /* لتوسيط النص */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>مروان محمد عكش محمد موسي</h1>
+
+</body>
+</body>
+</html>
